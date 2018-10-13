@@ -1,49 +1,62 @@
-var products = [
-  { id: 1, brand: "Nokia", model: "1100", inStock: true, price: 200 },
-  { id: 2, brand: "Samsung", model: "S8", inStock: true, price: 1200 },
-  { id: 3, brand: "Nokia", model: "2100", inStock: false, price: 200 }];
+var Product = require('../models/product.model');
 
 function ProductCtrl() {
 
   this.get = function (req, res) {
-    res.json(products);
+
+    Product.find(function (err, products) {
+      if (err) {
+        res.status(500);
+        //logging. Assignment
+        res.send("Internal Server Error");
+      }
+      else {
+        res.status(200);
+        res.json(products);
+      }
+    });
+
   };
 
   this.save = function (req, res) {
-    products.push(req.body);
+    var product = new Product(req.body);
 
-    res.status(201); //created
-    res.send("Success");
+    product.save(function (err, result) {
+      res.status(201); //created
+      res.json(result);
+    });
   }
 
   this.getById = function (req, res) {
     var id = req.params.id;
-    var product;
 
-    for (var i = 0; i < products.length; i++) {
-      if (products[i].id == id) product = products[i];
-    }
-    if (product) {
+    Product.findById(id, function (err, product) {
       res.status(200);
       res.json(product);
-    }
-    else {
-      res.status(404);
-      res.send("Not found");
-    }
+    });
   }
 
   this.delete = function (req, res) {
     var id = req.params.id;
-    for (var i = 0; i < products.length; i++) {
-      if (products[i].id == id) {
-        products.splice(i, 1);
-      }
-    }
 
-    res.status(204); //no content
-    res.send();
+    Product.findByIdAndDelete(id, function (err) {
+      res.status(204); //no content
+      res.send();
+    });
+
+  }
+
+  this.update = function (req, res) {
+    var id = req.params.id;
+    Product.findByIdAndUpdate(id, {
+      $set: { brand: req.body.brand, model: req.body.model, price: req.body.price, inStock: req.body.inStock }
+    }, function (err) {
+      res.status(204);
+      res.send();
+    });
   }
 }
 
 module.exports = new ProductCtrl();
+
+// Mongodb, mysql, postgres

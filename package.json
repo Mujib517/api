@@ -19,7 +19,7 @@
   "homepage": "https://github.com/Mujib517/api#readme",
   "dependencies": {
     "body-parser": "^1.18.3",
-    "cls": "^0.1.5",
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "mongoose": "^5.3.3"
   }
 }
