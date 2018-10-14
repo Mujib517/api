@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var productModel = mongoose.model("Product", {
-  brand: { type: String, required: [true,"Brand is mandatory"], minlength: 3, maxlength: 10 },
+  brand: { type: String, required: [true, "Brand is mandatory"], minlength: 3, maxlength: 10 },
   model: { type: String, required: true },
   price: {
     type: Number, validate: {
