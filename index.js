@@ -17,6 +17,6 @@ mongoose.connect("mongodb://localhost:27017/nareshdb");
 app.use(bodyParser.json());
 app.use('/', defaultRouter);
 
-app.use('/api/users/', userRouter);
+app.use('/api/users', userRouter);
 app.use(middlewares.authenticateToken);
 app.use('/api/products', productRouter);

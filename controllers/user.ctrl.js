@@ -1,4 +1,5 @@
 var jwt = require('jsonwebtoken');
+var User = require('../models/user.model');
 
 class UserCtrl {
 
@@ -22,6 +23,29 @@ class UserCtrl {
     }
   }
 
+  register(req, res) {
+    var user = new User(req.body);
+    user.save()
+      .then(function (data) {
+        res.status(201);
+        res.send("Success");
+      })
+      .catch(function (err) {
+        if (doesUserExist(err)) {
+          res.status(500);
+          res.send("Email already exists");
+        }
+        else {
+          res.status(500);
+          res.send("Internal Server Error");
+        }
+      });
+  }
+
+}
+
+function doesUserExist(err) {
+  return err && err.errmsg && err.errmsg.indexOf("duplicate key error") > -1;
 }
 
 module.exports = new UserCtrl();
