@@ -9,3 +9,7 @@ var productModel = mongoose.model("Product", {
 });
 
 module.exports = productModel;
+
+//controller
+//model
+//route

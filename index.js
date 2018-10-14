@@ -2,19 +2,21 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var app = express();
-var defaultCtrl = require('./controllers/default.ctrl');
 var productRouter = require('./routes/product.router');
+var defaultRouter = require('./routes/default.router');
+var middlewares = require('./middlewares');
+var userRouter = require('./routes/user.router');
+
 
 app.listen(3000, function () {
   console.log("Server is running on 3000");
 });
 
-//DDD
-//Database centric
 mongoose.connect("mongodb://localhost:27017/nareshdb");
 
 app.use(bodyParser.json());
+app.use('/', defaultRouter);
 
-//routing
-app.get('/', defaultCtrl.get);
+app.use('/api/users/', userRouter);
+app.use(middlewares.authenticateToken);
 app.use('/api/products', productRouter);
