@@ -1,59 +1,56 @@
-var Product = require('../models/product.model');
+var productSvc = require('../services/product.svc');
 
 function ProductCtrl() {
 
-  this.get = function (req, res) {
+  this.get = async function (req, res) {
 
-    Product.find(function (err, products) {
-      if (err) {
-        res.status(500);
-        //logging. Assignment
-        res.send("Internal Server Error");
-      }
-      else {
-        res.status(200);
-        res.json(products);
-      }
-    });
+    try {
+      var products = await productSvc.get();
+      res.status(200).json(products);
+    }
+    catch (err) {
+      res.status(500).send("Internal Server Error");
+    }
 
+    // productSvc.get()
+    //   .then(function (products) {
+    //     res.status(200);
+    //     res.json(products);
+    //   })
+    //   .catch(function () {
+    //     res.status(500);
+    //     res.send("Internal Server Error");
+    //   });
   };
 
-  this.save = function (req, res) {
-    var product = new Product(req.body);
-
-    product.save(function (err, result) {
-      if (err) res.status(500).send(err);
-      else res.status(201).json(result);
-    });
+  this.save = async function (req, res) {
+    var product = await productSvc.save(req.body);
+    res.status(201);
+    res.json(product);
   }
 
-  this.getById = function (req, res) {
+  this.getById = async function (req, res) {
     var id = req.params.id;
+    var product = await productSvc.getById(id);
+    res.status(200).json(product);
 
-    Product.findById(id, function (err, product) {
-      res.status(200);
-      res.json(product);
-    });
+
+    // Product.findById(id, function (err, product) {
+    //   res.status(200);
+    //   res.json(product);
+    // });
   }
 
-  this.delete = function (req, res) {
+  this.delete = async function (req, res) {
     var id = req.params.id;
-
-    Product.findByIdAndDelete(id, function (err) {
-      res.status(204); //no content
-      res.send();
-    });
-
+    await productSvc.delete(id);
+    res.status(204).send();
   }
 
-  this.update = function (req, res) {
+  this.update = async function (req, res) {
     var id = req.params.id;
-    Product.findByIdAndUpdate(id, {
-      $set: { brand: req.body.brand, model: req.body.model, price: req.body.price, inStock: req.body.inStock }
-    }, function (err) {
-      res.status(204);
-      res.send();
-    });
+    await productSvc.update(id, req.body);
+    res.status(204).send();
   }
 }
 
