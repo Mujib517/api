@@ -22,8 +22,8 @@ function ProductCtrl() {
     var product = new Product(req.body);
 
     product.save(function (err, result) {
-      res.status(201); //created
-      res.json(result);
+      if (err) res.status(500).send(err);
+      else res.status(201).json(result);
     });
   }
 
