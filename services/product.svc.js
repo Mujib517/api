@@ -2,11 +2,11 @@ var Product = require('../models/product.model');
 
 class ProductSvc {
   get() {
-    return Product.find().exec();
+    return Product.find({}, { __v: 0, lastUpdated: 0 }).exec();
   }
 
   getById(id) {
-    return Product.findById(id).exec();
+    return Product.findById(id, { __v: 0, lastUpdated: 0 }).exec();
   }
 
   save(data) {
