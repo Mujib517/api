@@ -7,8 +7,9 @@ var defaultRouter = require('./routes/default.router');
 var middlewares = require('./middlewares');
 var userRouter = require('./routes/user.router');
 
+var port = process.env.PORT || 3000;
 
-app.listen(3000, function () {
+app.listen(port, function () {
   console.log("Server is running on 3000");
 });
 
