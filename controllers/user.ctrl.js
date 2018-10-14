@@ -5,22 +5,27 @@ class UserCtrl {
 
   login(req, res) {
     var user = req.body;
-    if (user.username === 'admin' && user.password === 'pwd') {
-      var payload = { username: user.username };
-      var token = jwt.sign(payload, "secret");
+    //deferred execution
+    User.findOne({ username: user.username, password: user.password })
+      .exec()
+      .then(function (result) {
+        if (result) {
+          var payload = { username: user.username };
+          var token = jwt.sign(payload, "secret");
 
-      var response = {
-        username: user.username,
-        token: token
-      };
+          var response = {
+            username: user.username,
+            token: token
+          };
 
-      res.status(200);
-      res.send(response);
-    }
-    else {
-      res.status(401);
-      res.send("Unauthorized");
-    }
+          res.status(200);
+          res.send(response);
+        }
+        else res.status(401).send("Unauthorized");
+      })
+      .catch(function (err) {
+        res.status(401).send("Unauthorized");
+      });
   }
 
   register(req, res) {
@@ -47,5 +52,6 @@ class UserCtrl {
 function doesUserExist(err) {
   return err && err.errmsg && err.errmsg.indexOf("duplicate key error") > -1;
 }
+
 
 module.exports = new UserCtrl();

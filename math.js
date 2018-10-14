@@ -1,7 +1,11 @@
-var calculator = {
-  add: function (a, b) {
-    console.log(a + b);
-  }
-};
+// Truthy Falsy
 
-module.exports = calculator;
+//Falsy: false, 0 , null, undefined, "", NaN
+var x = [];
+
+if (x) {
+  console.log("IF condition");
+}
+else {
+  console.log("Else condition");
+}
